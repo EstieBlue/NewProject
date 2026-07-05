@@ -326,7 +326,21 @@ def compare_paths(num_robot, path_list):
     print(path_list)
     return path_list
 
+def double_check(path_lists): 
+    print("Going to solve previous issue")
+    path1 = path_lists[0]
+    path2 = path_lists[1]
+    for i in range(len(path1) - 1):
+        #print("Figureing it ")
+        if (path1[i] == path2[i]):
+            print("Bomb")
+            print("First", path1[i])
+            print("Second", path2[i])
 
+            # To try out this method I will have to make a bad node
+            bad_nodes.append(path1[i])
+            new_path2 = Shortest_path(graph1, bad_nodes, "H17", "B9")
+    return path1, new_path2
 
 
 # Trying out the BFS implementation
@@ -337,14 +351,20 @@ bad_nodes = ["C12", "C13", "C14", "C15", "C16", "D12", "D16", "E12", "E16", "F12
 #print(createRobots(2))
 #print(Robot.numRobots)
 Robot_Paths = creating_paths(2, ["F3", "H17"], ["B19", "B9"], graph1, bad_nodes)
-compare_paths(2, Robot_Paths)
+new_paths = compare_paths(2, Robot_Paths)
+#double_check(new_paths)
+print("__________________________________NEW______________________________________")
+print(double_check(new_paths))
 
 #start_node = "J0"
 #target_node = "A16"
 #shortest_path = Shortest_path(graph1, bad_nodes, start_node, target_node)
 #print("Shortest path from", start_node, "to", target_node, "is:", shortest_path)
 
-
-#[['F3', 'F4', 'F5', 'F6', 'F7', 'E8', 'D9', 'C10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19'], 
+# First Attempt
+#[  ['F3', 'F4', 'F5', 'F6', 'F7', 'E8', 'D9', 'C10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19'], 
 # ['H17', 'G17', 'F17', 'E17', 'D17', 'C17', 'B17', 'B16', 'B15', 'B14', 'B13', 'B12', 'B11', 'B10', 'B9', 'B9']]
 
+#Second Attempt
+#['F3', 'F4', 'F5', 'F6', 'F7', 'E8', 'D9', 'C10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19'], 
+# ['H17', 'G17', 'F17', 'E17', 'D17', 'C17', 'B17', 'B16', 'B15', 'B14', 'B13', 'B12', 'B11', 'B10', 'B9', 'B9', 'B9']]
