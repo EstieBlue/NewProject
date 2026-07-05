@@ -6,6 +6,7 @@
 
 #Importing the necessary libraries and modules for the BFS implementation
 from collections import deque
+from test import Robot
 
 #Initialize methods that will create the nodes and edges
 # v = node
@@ -220,13 +221,42 @@ def Shortest_path(graph, bad_nodes, startNode, target):
                         visited[i] = current
                         queue.append(i)
 
+# Uses BFS and turtle
+def createRobots(N):
+    #List of all the robots that will be created
+    robot_list = [0]*N
+
+    #List of all starting nodes
+    start_list = [""]*N
+
+    #List of all ending nodes
+    end_list = [""]*N
+
+    for i in range(N):
+        #Adding to list
+        robot1 = Robot()
+        robot_list[i] = robot1
+
+        #Calls the ask_Nodes method to ask for starting and ending nodes
+        robot1.ask_Nodes()
+
+        #Adding the starting and ending nodes to their respective lists
+        start_list[i] = robot1.start 
+        end_list[i] = robot1.end
+
+   
+    return start_list, end_list, robot_list
+
 
 
 # Trying out the BFS implementation
 graph1 = create_graph()
 
 bad_nodes = ["A0", "A1", "A2", "A17", "A18", "A19", "B0", "C0"]
-start_node = "J0"
-target_node = "A16"
-shortest_path = Shortest_path(graph1, bad_nodes, start_node, target_node)
-print("Shortest path from", start_node, "to", target_node, "is:", shortest_path)
+print(createRobots(2))
+print(Robot.numRobots)
+
+#start_node = "J0"
+#target_node = "A16"
+#shortest_path = Shortest_path(graph1, bad_nodes, start_node, target_node)
+#print("Shortest path from", start_node, "to", target_node, "is:", shortest_path)
