@@ -247,16 +247,104 @@ def createRobots(N):
    
     return start_list, end_list, robot_list
 
+# Create a compare path method that will compare the paths of the robots and see if they intersect or not
+def creating_paths(num_robot, start_list, end_list, graph, bad_nodes):
+    #print("Collison checker")
+    path_list = [""] * num_robot
+
+
+    for i in range(num_robot):
+        Start_node = start_list[i]
+        End_node = end_list[i]
+
+
+        #Store result in grid path
+        result = Shortest_path(graph, bad_nodes, Start_node, End_node)
+        #print(result)
+        #print("-----------")
+        path_list[i] = result
+
+    # Inside path_list should be all paths from the robots to get to thier destination
+    return path_list
+
+
+def compare_paths(num_robot, path_list):
+    #Now its time to check each robot path to see if they do not intersect a node at the same time
+    # Had to do num_robot -1 because each path is going to check with the next path
+    for i in range((num_robot-1)):
+        print("Running the Comparing Path Program")
+        path1 = path_list[i]
+        path2 = path_list[i+1]
+        print(path1)
+        print(path2)
+
+
+        # Right now it only works if both of them are the same length
+        # In order to solve the issue we need to get the path that is the longest
+        path1_Longer = False
+        size = 0
+        if(len(path1) >= len(path2)):
+            size = len(path1)
+            path1_Longer = True
+        elif(len(path1) < len(path2)):
+            size = len(path2)
+            path1_Longer = False
+
+
+        #This will iterate through 2 paths, checking if they have the same coordinates at the same place
+        for i in range(size):
+
+            #Since the for loop goes for the larger path, then the shorter path will eventually be out of indexes to compare
+            # This way the shorter path will stop when its at its end and will continue to check the last position with the longer path coordinates
+            # Until there is no more of the longer path
+            if(path1_Longer):
+                long_path = path1[i]
+
+                if(not i >= len(path2)):
+                    short_path = path2[i]
+            else:
+                long_path = path2[i]
+                if(not i >= len(path1)):
+                    short_path = path1[i]
+
+
+            if(long_path == short_path):
+                print("Collide At Position ", (i+1))
+                # I will add the previous node, that the short path was on, to the short path of were it intersects
+                 #Identify short path, is it path 1 or path 2
+                if(path1_Longer):
+                    #Then Path2 is the shorter path
+                    #Did not take into account that the short path will run out, and there is a collision afterwards
+                    #path2.insert((i-1), path2[i-1])
+                    path2.insert((len(path2)-1), path2[(len(path2)-1)])
+
+
+                else:
+                    #path1.insert((i-1), path1[i-1])
+                    path1.insert((len(path1)-1), path1[(len(path1)-1)])
+    print("Finished Paths")
+    print(path_list)
+    return path_list
+
+
 
 
 # Trying out the BFS implementation
 graph1 = create_graph()
 
-bad_nodes = ["A0", "A1", "A2", "A17", "A18", "A19", "B0", "C0"]
-print(createRobots(2))
-print(Robot.numRobots)
+bad_nodes = ["C12", "C13", "C14", "C15", "C16", "D12", "D16", "E12", "E16", "F12", "F16", "G12", "G16", "H12", "H16", "I12", "I13", "I14", "I15", "I16"]
+
+#print(createRobots(2))
+#print(Robot.numRobots)
+Robot_Paths = creating_paths(2, ["F3", "H17"], ["B19", "B9"], graph1, bad_nodes)
+compare_paths(2, Robot_Paths)
 
 #start_node = "J0"
 #target_node = "A16"
 #shortest_path = Shortest_path(graph1, bad_nodes, start_node, target_node)
 #print("Shortest path from", start_node, "to", target_node, "is:", shortest_path)
+
+
+#[['F3', 'F4', 'F5', 'F6', 'F7', 'E8', 'D9', 'C10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19'], 
+# ['H17', 'G17', 'F17', 'E17', 'D17', 'C17', 'B17', 'B16', 'B15', 'B14', 'B13', 'B12', 'B11', 'B10', 'B9', 'B9']]
+
