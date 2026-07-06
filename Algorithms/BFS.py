@@ -221,47 +221,39 @@ def Shortest_path(graph, bad_nodes, startNode, target):
                         visited[i] = current
                         queue.append(i)
 
-# Uses BFS and turtle
-def createRobots(N):
+
+
+
+def createRobots(num):
     #List of all the robots that will be created
-    robot_list = [0]*N
+    robot_list = [0]*num
 
-    #List of all starting nodes
-    start_list = [""]*N
-
-    #List of all ending nodes
-    end_list = [""]*N
-
-    for i in range(N):
+    for i in range(num):
         #Adding to list
-        robot1 = Robot()
-        robot_list[i] = robot1
+        new_robot = Robot()
+        robot_list[i] = new_robot
 
         #Calls the ask_Nodes method to ask for starting and ending nodes
-        robot1.ask_Nodes()
+        # The information will be stored inside the robot class
+        new_robot.ask_Nodes()
 
-        #Adding the starting and ending nodes to their respective lists
-        start_list[i] = robot1.start 
-        end_list[i] = robot1.end
-
-   
-    return start_list, end_list, robot_list
+    return robot_list
 
 # Create a compare path method that will compare the paths of the robots and see if they intersect or not
-def creating_paths(num_robot, start_list, end_list, graph, bad_nodes):
+def creating_paths(num_robot, robot_list, bad_nodes):
     #print("Collison checker")
     path_list = [""] * num_robot
 
-
     for i in range(num_robot):
-        Start_node = start_list[i]
-        End_node = end_list[i]
+        Start_node = robot_list[i].start
+        End_node = robot_list[i].end
 
 
         #Store result in grid path
-        result = Shortest_path(graph, bad_nodes, Start_node, End_node)
-        #print(result)
-        #print("-----------")
+        result = Shortest_path(graph1, bad_nodes, Start_node, End_node)
+        robot_list[i].path = result
+        print(result)
+        print("-----------")
         path_list[i] = result
 
     # Inside path_list should be all paths from the robots to get to thier destination
@@ -326,6 +318,9 @@ def compare_paths(num_robot, path_list):
     print(path_list)
     return path_list
 
+
+
+
 def double_check(path_lists): 
     print("Going to solve previous issue")
     path1 = path_lists[0]
@@ -348,18 +343,24 @@ graph1 = create_graph()
 
 bad_nodes = ["C12", "C13", "C14", "C15", "C16", "D12", "D16", "E12", "E16", "F12", "F16", "G12", "G16", "H12", "H16", "I12", "I13", "I14", "I15", "I16"]
 
+result_New = createRobots(2)
+creating_paths(2, result_New, bad_nodes)
+
 #print(createRobots(2))
 #print(Robot.numRobots)
-Robot_Paths = creating_paths(2, ["F3", "H17"], ["B19", "B9"], graph1, bad_nodes)
-new_paths = compare_paths(2, Robot_Paths)
-#double_check(new_paths)
-print("__________________________________NEW______________________________________")
-print(double_check(new_paths))
 
-#start_node = "J0"
-#target_node = "A16"
-#shortest_path = Shortest_path(graph1, bad_nodes, start_node, target_node)
-#print("Shortest path from", start_node, "to", target_node, "is:", shortest_path)
+
+
+
+
+
+# TRYING OUT SOMETHING
+# Robot_Paths = creating_paths(2, ["F3", "H17"], ["B19", "B9"], graph1, bad_nodes)
+# new_paths = compare_paths(2, Robot_Paths)
+# #double_check(new_paths)
+# print("__________________________________NEW______________________________________")
+# # print(double_check(new_paths))
+
 
 # First Attempt
 #[  ['F3', 'F4', 'F5', 'F6', 'F7', 'E8', 'D9', 'C10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19'], 
@@ -368,3 +369,7 @@ print(double_check(new_paths))
 #Second Attempt
 #['F3', 'F4', 'F5', 'F6', 'F7', 'E8', 'D9', 'C10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19'], 
 # ['H17', 'G17', 'F17', 'E17', 'D17', 'C17', 'B17', 'B16', 'B15', 'B14', 'B13', 'B12', 'B11', 'B10', 'B9', 'B9', 'B9']]
+
+#Third Attempt
+#(['F3', 'F4', 'F5', 'F6', 'F7', 'E8', 'D9', 'C10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19'],
+#  ['H17', 'G17', 'F17', 'E17', 'D17', 'C17', 'B17', 'B16', 'B15', 'A14', 'A13', 'A12', 'A11', 'A10', 'B9'])

@@ -3,11 +3,12 @@
 class Robot:
     # Declaring class variables
     numRobots = 0
-    def __init__(self, start = "", end = "", path =[]):
+    def __init__(self, start = "", end = "", path =[], personal_bad_nodes = []):
         #Ask user for starting Node
         self.start = start
         self.end = end
         self.path = path
+        self.personal_bad_nodes = personal_bad_nodes
         Robot.numRobots += 1
 
     def __str__(self):
