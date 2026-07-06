@@ -223,7 +223,6 @@ def Shortest_path(graph, bad_nodes, startNode, target):
 
 
 
-
 def createRobots(num):
     #List of all the robots that will be created
     robot_list = [0]*num
@@ -241,82 +240,79 @@ def createRobots(num):
 
 # Create a compare path method that will compare the paths of the robots and see if they intersect or not
 def creating_paths(num_robot, robot_list, bad_nodes):
-    #print("Collison checker")
-    path_list = [""] * num_robot
-
+  
     for i in range(num_robot):
         Start_node = robot_list[i].start
         End_node = robot_list[i].end
 
-
         #Store result in grid path
         result = Shortest_path(graph1, bad_nodes, Start_node, End_node)
+
+        #Saving the path in its object (Robot Class)
         robot_list[i].path = result
         print(result)
         print("-----------")
-        path_list[i] = result
-
-    # Inside path_list should be all paths from the robots to get to thier destination
-    return path_list
 
 
-def compare_paths(num_robot, path_list):
+
+def compare_paths(robot1, robot2):
     #Now its time to check each robot path to see if they do not intersect a node at the same time
-    # Had to do num_robot -1 because each path is going to check with the next path
-    for i in range((num_robot-1)):
-        print("Running the Comparing Path Program")
-        path1 = path_list[i]
-        path2 = path_list[i+1]
-        print(path1)
-        print(path2)
+    print("Running the Comparing Path Program")
+    path1 = robot1.path
+    path2 = robot2.path
+    print(path1)
+    print(path2)
 
 
-        # Right now it only works if both of them are the same length
-        # In order to solve the issue we need to get the path that is the longest
+    # Right now it only works if both of them are the same length
+    # In order to solve the issue we need to get the path that is the longest
+    path1_Longer = False
+    size = 0
+    if(len(path1) >= len(path2)):
+        size = len(path1)
+        path1_Longer = True
+    elif(len(path1) < len(path2)):
+        size = len(path2)
         path1_Longer = False
-        size = 0
-        if(len(path1) >= len(path2)):
-            size = len(path1)
-            path1_Longer = True
-        elif(len(path1) < len(path2)):
-            size = len(path2)
-            path1_Longer = False
 
 
-        #This will iterate through 2 paths, checking if they have the same coordinates at the same place
-        for i in range(size):
+    #This will iterate through 2 paths, checking if they have the same coordinates at the same place
+    for i in range(size):
 
-            #Since the for loop goes for the larger path, then the shorter path will eventually be out of indexes to compare
-            # This way the shorter path will stop when its at its end and will continue to check the last position with the longer path coordinates
-            # Until there is no more of the longer path
+        #Since the for loop goes for the larger path, then the shorter path will eventually be out of indexes to compare
+        # This way the shorter path will stop when its at its end and will continue to check the last position with the longer path coordinates
+        # Until there is no more of the longer path
+        if(path1_Longer):
+            long_path = path1[i]
+
+            if(not i >= len(path2)):
+                short_path = path2[i]
+        else:
+            long_path = path2[i]
+            if(not i >= len(path1)):
+                short_path = path1[i]
+
+
+        if(long_path == short_path):
+            print("Collide At Position ", (i+1))
+            # I will add the previous node, that the short path was on, to the short path of were it intersects
+                #Identify short path, is it path 1 or path 2
             if(path1_Longer):
-                long_path = path1[i]
+                #Then Path2 is the shorter path
+                #Did not take into account that the short path will run out, and there is a collision afterwards
+                #path2.insert((i-1), path2[i-1])
+                path2.insert((len(path2)-1), path2[(len(path2)-1)])
 
-                if(not i >= len(path2)):
-                    short_path = path2[i]
+
             else:
-                long_path = path2[i]
-                if(not i >= len(path1)):
-                    short_path = path1[i]
-
-
-            if(long_path == short_path):
-                print("Collide At Position ", (i+1))
-                # I will add the previous node, that the short path was on, to the short path of were it intersects
-                 #Identify short path, is it path 1 or path 2
-                if(path1_Longer):
-                    #Then Path2 is the shorter path
-                    #Did not take into account that the short path will run out, and there is a collision afterwards
-                    #path2.insert((i-1), path2[i-1])
-                    path2.insert((len(path2)-1), path2[(len(path2)-1)])
-
-
-                else:
-                    #path1.insert((i-1), path1[i-1])
-                    path1.insert((len(path1)-1), path1[(len(path1)-1)])
+                #path1.insert((i-1), path1[i-1])
+                path1.insert((len(path1)-1), path1[(len(path1)-1)])
     print("Finished Paths")
-    print(path_list)
-    return path_list
+
+    #Will return the finished paths
+    # After test I will directly change the paths from the robot class
+    return path1, path2
+   
 
 
 
@@ -345,7 +341,7 @@ bad_nodes = ["C12", "C13", "C14", "C15", "C16", "D12", "D16", "E12", "E16", "F12
 
 result_New = createRobots(2)
 creating_paths(2, result_New, bad_nodes)
-
+#compare_paths(robot_list[0], robot)
 #print(createRobots(2))
 #print(Robot.numRobots)
 
