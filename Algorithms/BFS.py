@@ -298,16 +298,24 @@ def compare_paths(robot1, robot2):
             # I will add the previous node, that the short path was on, to the short path of were it intersects
                 #Identify short path, is it path 1 or path 2
             if(path1_Longer):
-                #Then Path2 is the shorter path
-                #Did not take into account that the short path will run out, and there is a collision afterwards
-                #path2.insert((i-1), path2[i-1])
-                path2.insert((len(path2)-1), path2[(len(path2)-1)])
-
-
+                if(i <= len(path2)):
+                    #Then Path2 is the shorter path AND Still going
+                    path2.insert((i-1), path2[i-1])
+                else:
+                    #Did not take into account that the short path will run out, and there is a collision afterwards
+                    path2.insert((len(path2)-1), path2[(len(path2)-1)])
             else:
-                #path1.insert((i-1), path1[i-1])
-                path1.insert((len(path1)-1), path1[(len(path1)-1)])
+                if(i <= len(path1)):
+                    #Then Path1 is the shorter path AND Still going
+                    path1.insert((i-1), path1[i-1])
+                else:
+                    #There is a collision after the short path has run out
+                    path1.insert((len(path1)-1), path1[(len(path1)-1)])
+
+
     print("Finished Paths")
+    print(path1)
+    print(path2)
 
     #Will return the finished paths
     # After test I will directly change the paths from the robot class
@@ -316,22 +324,26 @@ def compare_paths(robot1, robot2):
 
 
 
-
-def double_check(path_lists): 
+# Did abosupltly nothing 
+def double_check(path1, path2): 
     print("Going to solve previous issue")
-    path1 = path_lists[0]
-    path2 = path_lists[1]
+    count = 0
     for i in range(len(path1) - 1):
         #print("Figureing it ")
-        if (path1[i] == path2[i]):
-            print("Bomb")
-            print("First", path1[i])
-            print("Second", path2[i])
+        if (count > 1):
+            if (path1[i] == path2[i-1]):
+                print("Bomb")
+                print("First", path1[i])
+                print("Second", path2[i-1])
 
-            # To try out this method I will have to make a bad node
-            bad_nodes.append(path1[i])
-            new_path2 = Shortest_path(graph1, bad_nodes, "H17", "B9")
-    return path1, new_path2
+                # To try out this method I will have to make a bad node
+                # Will add the bad node from path1 to path2 robot, to personal_bad_nodes
+                bad_nodes.append(path1[i])
+                path2 = Shortest_path(graph1, bad_nodes, "H17", "B9")
+        count += 1
+    print(path1)
+    print(path2)
+    #return path1, new_path2
 
 
 # Trying out the BFS implementation
@@ -339,13 +351,14 @@ graph1 = create_graph()
 
 bad_nodes = ["C12", "C13", "C14", "C15", "C16", "D12", "D16", "E12", "E16", "F12", "F16", "G12", "G16", "H12", "H16", "I12", "I13", "I14", "I15", "I16"]
 
-result_New = createRobots(2)
-creating_paths(2, result_New, bad_nodes)
-#compare_paths(robot_list[0], robot)
+new_robots_list = createRobots(2)
+creating_paths(2, new_robots_list, bad_nodes)
+compared_paths = compare_paths(new_robots_list[0], new_robots_list[1])
+double_check(compared_paths[0], compared_paths[1])
+
+
 #print(createRobots(2))
 #print(Robot.numRobots)
-
-
 
 
 
