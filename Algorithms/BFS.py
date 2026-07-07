@@ -236,6 +236,10 @@ def createRobots(num):
         # The information will be stored inside the robot class
         new_robot.ask_Nodes()
 
+        #Take the obstacles/bad_nodes of the maze into thier personal_bad_nodes attribute
+        #This  would also mean bad_nodes would have to be a parameter for createRobots method
+        new_robot.personal_bad_nodes = bad_nodes
+
     return robot_list
 
 # Create a compare path method that will compare the paths of the robots and see if they intersect or not
@@ -319,27 +323,37 @@ def compare_paths(robot1, robot2):
 
     #Will return the finished paths
     # After test I will directly change the paths from the robot class
+
+    robot1.path = path1
+    robot2.path = path2
+
     return path1, path2
    
 
 
-
 # Did abosupltly nothing 
-def double_check(path1, path2): 
+def double_check(robot1, robot2): 
     print("Going to solve previous issue")
+    path1 = robot1.path
+    path2 = robot2.path
     count = 0
-    for i in range(len(path1) - 1):
+    for i in range(15):         # This line is also not full proof 
         #print("Figureing it ")
         if (count > 1):
-            if (path1[i] == path2[i-1]):
+            if (path1[i] == path2[i-1]):        #Niether is this line
                 print("Bomb")
                 print("First", path1[i])
                 print("Second", path2[i-1])
 
                 # To try out this method I will have to make a bad node
                 # Will add the bad node from path1 to path2 robot, to personal_bad_nodes
-                bad_nodes.append(path1[i])
-                path2 = Shortest_path(graph1, bad_nodes, "H17", "B9")
+                #Also to which path should I make it so that it is a bad node to 
+                robot2.personal_bad_nodes.append(path1[i])
+                #print("_----------_")
+                #print(robot2.personal_bad_nodes)
+                
+
+                path2 = Shortest_path(graph1, robot2.personal_bad_nodes, "H17", "B9")
         count += 1
     print(path1)
     print(path2)
@@ -353,8 +367,8 @@ bad_nodes = ["C12", "C13", "C14", "C15", "C16", "D12", "D16", "E12", "E16", "F12
 
 new_robots_list = createRobots(2)
 creating_paths(2, new_robots_list, bad_nodes)
-compared_paths = compare_paths(new_robots_list[0], new_robots_list[1])
-double_check(compared_paths[0], compared_paths[1])
+compare_paths(new_robots_list[0], new_robots_list[1])
+double_check(new_robots_list[0], new_robots_list[1])
 
 
 #print(createRobots(2))
