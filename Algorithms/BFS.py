@@ -316,19 +316,14 @@ def compare_paths(robot1, robot2):
                     #There is a collision after the short path has run out
                     path1.insert((len(path1)-1), path1[(len(path1)-1)])
 
-
     print("Finished Paths")
     print(path1)
     print(path2)
 
-    #Will return the finished paths
-    # After test I will directly change the paths from the robot class
-
+    #Saves the new paths to its robot object, for path attribute
     robot1.path = path1
     robot2.path = path2
 
-    return path1, path2
-   
 
 
 # Did abosupltly nothing 
@@ -336,28 +331,55 @@ def double_check(robot1, robot2):
     print("Going to solve previous issue")
     path1 = robot1.path
     path2 = robot2.path
-    count = 0
-    for i in range(15):         # This line is also not full proof 
-        #print("Figureing it ")
-        if (count > 1):
-            if (path1[i] == path2[i-1]):        #Niether is this line
+
+    # Getting the longer path
+    path1_Longer = False
+    size = 0
+
+    # Grabs the longest path to set it as the size
+    if(len(path1) >= len(path2)):
+        size = len(path1)
+        path1_Longer = True
+    elif(len(path1) < len(path2)):
+        size = len(path2)
+        path1_Longer = False
+
+    for i in range(size):         # This line is also not full proof, could change it to a while loop
+
+        #It would cause an error if it executed on the first try, since I use i-1
+        if (i > 0):
+            # Sets the next point of the paths, making sure the path has not ended
+            # Could cause some potencial problems?????
+            if(path1_Longer):
+                new_path1 = path1[i]
+                if(not i >= len(path2)):
+                    new_path2 = path2[i-1]
+            else:
+                new_path2 = path2[i-1]
+                if(not i >= len(path1)):
+                    new_path1 = path1[i]
+
+            # Checks if they are the same
+            if (new_path1 == new_path2):      
                 print("Bomb")
                 print("First", path1[i])
                 print("Second", path2[i-1])
 
-                # To try out this method I will have to make a bad node
-                # Will add the bad node from path1 to path2 robot, to personal_bad_nodes
-                #Also to which path should I make it so that it is a bad node to 
-                robot2.personal_bad_nodes.append(path1[i])
-                #print("_----------_")
-                #print(robot2.personal_bad_nodes)
+                # The bad node is added to the robots own personal_bad_node list
+                # Then create a new path based on the new bad nodes
+                robot2.personal_bad_nodes.append(new_path1)
+                start = robot2.start
+                end = robot2.end
                 
+                path2 = Shortest_path(graph1, robot2.personal_bad_nodes, start, end)
 
-                path2 = Shortest_path(graph1, robot2.personal_bad_nodes, "H17", "B9")
-        count += 1
-    print(path1)
-    print(path2)
-    #return path1, new_path2
+            #This is an extra check that ensures, no robot will be at a node at the same time
+            if(new_path1 == new_path2):
+                compare_paths(robot1, robot2)
+
+    # Saving it to the robot object
+    robot1.path = path1
+    robot2.path = path2
 
 
 # Trying out the BFS implementation
@@ -369,30 +391,3 @@ new_robots_list = createRobots(2)
 creating_paths(2, new_robots_list, bad_nodes)
 compare_paths(new_robots_list[0], new_robots_list[1])
 double_check(new_robots_list[0], new_robots_list[1])
-
-
-#print(createRobots(2))
-#print(Robot.numRobots)
-
-
-
-
-# TRYING OUT SOMETHING
-# Robot_Paths = creating_paths(2, ["F3", "H17"], ["B19", "B9"], graph1, bad_nodes)
-# new_paths = compare_paths(2, Robot_Paths)
-# #double_check(new_paths)
-# print("__________________________________NEW______________________________________")
-# # print(double_check(new_paths))
-
-
-# First Attempt
-#[  ['F3', 'F4', 'F5', 'F6', 'F7', 'E8', 'D9', 'C10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19'], 
-# ['H17', 'G17', 'F17', 'E17', 'D17', 'C17', 'B17', 'B16', 'B15', 'B14', 'B13', 'B12', 'B11', 'B10', 'B9', 'B9']]
-
-#Second Attempt
-#['F3', 'F4', 'F5', 'F6', 'F7', 'E8', 'D9', 'C10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19'], 
-# ['H17', 'G17', 'F17', 'E17', 'D17', 'C17', 'B17', 'B16', 'B15', 'B14', 'B13', 'B12', 'B11', 'B10', 'B9', 'B9', 'B9']]
-
-#Third Attempt
-#(['F3', 'F4', 'F5', 'F6', 'F7', 'E8', 'D9', 'C10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19'],
-#  ['H17', 'G17', 'F17', 'E17', 'D17', 'C17', 'B17', 'B16', 'B15', 'A14', 'A13', 'A12', 'A11', 'A10', 'B9'])
