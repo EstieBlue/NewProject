@@ -258,77 +258,8 @@ def creating_paths(num_robot, robot_list, bad_nodes):
         print("-----------")
 
 
-
-def compare_paths(robot1, robot2):
-    #Now its time to check each robot path to see if they do not intersect a node at the same time
-    print("Running the Comparing Path Program")
-    path1 = robot1.path
-    path2 = robot2.path
-    print(path1)
-    print(path2)
-
-
-    # Right now it only works if both of them are the same length
-    # In order to solve the issue we need to get the path that is the longest
-    path1_Longer = False
-    size = 0
-    if(len(path1) >= len(path2)):
-        size = len(path1)
-        path1_Longer = True
-    elif(len(path1) < len(path2)):
-        size = len(path2)
-        path1_Longer = False
-
-
-    #This will iterate through 2 paths, checking if they have the same coordinates at the same place
-    for i in range(size):
-
-        #Since the for loop goes for the larger path, then the shorter path will eventually be out of indexes to compare
-        # This way the shorter path will stop when its at its end and will continue to check the last position with the longer path coordinates
-        # Until there is no more of the longer path
-        if(path1_Longer):
-            long_path = path1[i]
-
-            if(not i >= len(path2)):
-                short_path = path2[i]
-        else:
-            long_path = path2[i]
-            if(not i >= len(path1)):
-                short_path = path1[i]
-
-
-        if(long_path == short_path):
-            print("Collide At Position ", (i+1))
-            # I will add the previous node, that the short path was on, to the short path of were it intersects
-                #Identify short path, is it path 1 or path 2
-            if(path1_Longer):
-                if(i <= len(path2)):
-                    #Then Path2 is the shorter path AND Still going
-                    path2.insert((i-1), path2[i-1])
-                else:
-                    #Did not take into account that the short path will run out, and there is a collision afterwards
-                    path2.insert((len(path2)-1), path2[(len(path2)-1)])
-            else:
-                if(i <= len(path1)):
-                    #Then Path1 is the shorter path AND Still going
-                    path1.insert((i-1), path1[i-1])
-                else:
-                    #There is a collision after the short path has run out
-                    path1.insert((len(path1)-1), path1[(len(path1)-1)])
-
-    print("Finished Paths")
-    print(path1)
-    print(path2)
-
-    #Saves the new paths to its robot object, for path attribute
-    robot1.path = path1
-    robot2.path = path2
-
-
-
-# Did abosupltly nothing 
-def double_check(robot1, robot2): 
-    print("Going to solve previous issue")
+def new_compare_paths(robot1, robot2):
+    print("Newist Method")
     path1 = robot1.path
     path2 = robot2.path
 
@@ -344,43 +275,39 @@ def double_check(robot1, robot2):
         size = len(path2)
         path1_Longer = False
 
-    for i in range(size):         # This line is also not full proof, could change it to a while loop
+    for i in range(size):
 
-        #It would cause an error if it executed on the first try, since I use i-1
-        if (i > 0):
-            # Sets the next point of the paths, making sure the path has not ended
-            # Could cause some potencial problems?????
-            if(path1_Longer):
+        #Makes sure the paths have not run out
+        if(path1_Longer):
+            new_path1 = path1[i]
+            if(not i >= len(path2)):
+                new_path2 = path2[i]
+        else:
+            new_path2 = path2[i]
+            if(not i >= len(path1)):
                 new_path1 = path1[i]
-                if(not i >= len(path2)):
-                    new_path2 = path2[i-1]
-            else:
-                new_path2 = path2[i-1]
-                if(not i >= len(path1)):
-                    new_path1 = path1[i]
 
-            # Checks if they are the same
-            if (new_path1 == new_path2):      
+        if (new_path1 == new_path2):      
                 print("Bomb")
                 print("First", path1[i])
-                print("Second", path2[i-1])
+                print("Second", path2[i])
 
                 # The bad node is added to the robots own personal_bad_node list
                 # Then create a new path based on the new bad nodes
-                robot2.personal_bad_nodes.append(new_path1)
-                start = robot2.start
-                end = robot2.end
+                robot1.personal_bad_nodes.append(new_path1)
+                start = robot1.start
+                end = robot1.end
                 
-                path2 = Shortest_path(graph1, robot2.personal_bad_nodes, start, end)
+                path1 = Shortest_path(graph1, robot1.personal_bad_nodes, start, end)
 
-            #This is an extra check that ensures, no robot will be at a node at the same time
-            if(new_path1 == new_path2):
-                compare_paths(robot1, robot2)
+    print(path1)
+    print(path2)
 
-    # Saving it to the robot object
+    #Saves the new paths to its robot object, for path attribute
     robot1.path = path1
     robot2.path = path2
 
+        
 
 # Trying out the BFS implementation
 graph1 = create_graph()
@@ -389,5 +316,4 @@ bad_nodes = ["C12", "C13", "C14", "C15", "C16", "D12", "D16", "E12", "E16", "F12
 
 new_robots_list = createRobots(2)
 creating_paths(2, new_robots_list, bad_nodes)
-compare_paths(new_robots_list[0], new_robots_list[1])
-double_check(new_robots_list[0], new_robots_list[1])
+new_compare_paths(new_robots_list[0], new_robots_list[1])

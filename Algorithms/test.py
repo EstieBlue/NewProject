@@ -11,6 +11,7 @@ class Robot:
         self.personal_bad_nodes = personal_bad_nodes
         Robot.numRobots += 1
 
+
     def __str__(self):
         return f" Start: {self.start}, End: {self.end}, Path: {self.path}"
 
