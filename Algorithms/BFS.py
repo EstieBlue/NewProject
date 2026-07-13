@@ -6,7 +6,7 @@
 
 #Importing the necessary libraries and modules for the BFS implementation
 from collections import deque
-from test import Robot
+from RobotClass import Robot
 
 #Initialize methods that will create the nodes and edges
 # v = node
