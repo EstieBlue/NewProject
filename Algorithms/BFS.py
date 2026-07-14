@@ -257,7 +257,7 @@ def creating_paths(num_robot, robot_list, bad_nodes):
         print(result)
         print("-----------")
 
-
+# NEED to add a catch that says if no path can be found, then to NOT crash out
 def new_compare_paths(robot1, robot2):
     print("Newist Method")
     path1 = robot1.path
